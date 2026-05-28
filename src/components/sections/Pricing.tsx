@@ -6,20 +6,20 @@ import { Section } from "@/components/Section";
 const plans = [
   {
     name: "Basic",
-    price: "2,999",
+    price: "2,499",
     tagline: "For new Flipkart sellers",
     features: ["20 product listings", "Inventory updates", "Basic catalog support", "Email support", "Monthly report"],
   },
   {
     name: "Growth",
-    price: "7,999",
+    price: "4,599",
     tagline: "Most chosen by growing brands",
     popular: true,
     features: ["100 product listings", "Sponsored Ads management", "Weekly performance reports", "Account health monitoring", "Priority chat support"],
   },
   {
     name: "Premium",
-    price: "14,999",
+    price: "7,999",
     tagline: "Full done-for-you service",
     features: ["Unlimited listings", "Full account management", "Dedicated account manager", "Daily ad optimization", "24/7 support + WhatsApp"],
   },
