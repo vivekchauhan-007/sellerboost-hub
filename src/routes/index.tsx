@@ -1,29 +1,41 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Layout } from "@/components/Layout";
+import { Hero } from "@/components/sections/Hero";
+import { Services } from "@/components/sections/Services";
+import { WhyUs } from "@/components/sections/WhyUs";
+import { Results } from "@/components/sections/Results";
+import { Pricing } from "@/components/sections/Pricing";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { AuditForm } from "@/components/sections/AuditForm";
+import { FAQ } from "@/components/sections/FAQ";
+import { CTA } from "@/components/sections/CTA";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "SellerBoost — Flipkart Seller Account Management Agency in India" },
+      { name: "description", content: "Grow your Flipkart sales with India's premium seller account management agency. Listing optimization, ads, cataloging, inventory and account health — done for you." },
+      { property: "og:title", content: "SellerBoost — Flipkart Seller Account Management Agency" },
+      { property: "og:description", content: "Done-for-you Flipkart growth services: listings, ads, catalog, inventory and account health." },
+      { property: "og:url", content: "/" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Index,
+  component: Home,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Home() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <Layout>
+      <Hero />
+      <Services />
+      <WhyUs />
+      <Results />
+      <Pricing />
+      <Testimonials />
+      <AuditForm />
+      <FAQ />
+      <CTA />
+    </Layout>
   );
 }
