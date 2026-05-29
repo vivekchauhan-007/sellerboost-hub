@@ -8,7 +8,7 @@ import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const nav = [
+const nav: ReadonlyArray<{ to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }> = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/pricing", label: "Pricing Plans", icon: Tag },
   { to: "/admin/services", label: "Services", icon: Wrench },
@@ -17,7 +17,7 @@ const nav = [
   { to: "/admin/blog", label: "Blog", icon: Newspaper },
   { to: "/admin/submissions", label: "Submissions", icon: Inbox },
   { to: "/admin/settings", label: "Site Settings", icon: Settings },
-] as const;
+];
 
 export function AdminShell({ title, children, actions }: { title: string; children: ReactNode; actions?: ReactNode }) {
   const { signOut, user } = useAuth();
