@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const schema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
@@ -15,10 +17,12 @@ const schema = z.object({
 });
 
 export function AuditForm() {
+  const settings = useSiteSettings();
   const [submitted, setSubmitted] = useState(false);
   const [sales, setSales] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const parsed = schema.safeParse({
@@ -27,10 +31,15 @@ export function AuditForm() {
       business: String(fd.get("business") ?? ""),
       sales,
     });
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
-    }
+    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+
+    setBusy(true);
+    const { error } = await supabase.from("contact_submissions").insert({
+      name: parsed.data.name, phone: parsed.data.phone, business: parsed.data.business,
+      sales_range: parsed.data.sales, source: "audit",
+    });
+    setBusy(false);
+    if (error) return toast.error(error.message);
     setSubmitted(true);
     toast.success("Audit request received! We'll call you within 24 hours.");
   };
@@ -59,7 +68,7 @@ export function AuditForm() {
                 ))}
               </ul>
               <a
-                href="https://wa.me/919876543210"
+                href={`https://wa.me/${settings.whatsapp_number}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-6 inline-flex items-center gap-2 text-sm font-medium underline-offset-4 hover:underline"
@@ -103,8 +112,8 @@ export function AuditForm() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 gap-2">
-                    Request Free Audit <ArrowRight className="size-4" />
+                  <Button type="submit" disabled={busy} className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90 gap-2">
+                    {busy ? "Submitting…" : <>Request Free Audit <ArrowRight className="size-4" /></>}
                   </Button>
                   <p className="text-xs text-muted-foreground text-center">We respect your privacy. No spam ever.</p>
                 </form>
