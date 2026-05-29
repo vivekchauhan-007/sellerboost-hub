@@ -8,12 +8,14 @@ export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminHome,
 });
 
-function useCount(table: "pricing_plans" | "services" | "testimonials" | "blog_posts" | "contact_submissions" | "results_stats", extra?: { is_read?: boolean }) {
+function useCount(table: "pricing_plans" | "services" | "testimonials" | "blog_posts" | "contact_submissions" | "results_stats", unreadOnly = false) {
   return useQuery({
-    queryKey: ["count", table, extra],
+    queryKey: ["count", table, unreadOnly],
     queryFn: async () => {
-      let q = supabase.from(table).select("*", { count: "exact", head: true });
-      if (extra?.is_read !== undefined) q = q.eq("is_read", extra.is_read);
+      const base = supabase.from(table).select("*", { count: "exact", head: true });
+      const q = unreadOnly && table === "contact_submissions"
+        ? supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("is_read", false)
+        : base;
       const { count } = await q;
       return count ?? 0;
     },
@@ -27,7 +29,7 @@ function AdminHome() {
   const results = useCount("results_stats");
   const blog = useCount("blog_posts");
   const subs = useCount("contact_submissions");
-  const unread = useCount("contact_submissions", { is_read: false });
+  const unread = useCount("contact_submissions", true);
 
   const cards = [
     { to: "/admin/pricing", label: "Pricing Plans", icon: Tag, count: pricing.data },
