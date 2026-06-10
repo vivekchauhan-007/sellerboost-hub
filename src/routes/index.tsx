@@ -2,12 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
-import { WhyUs } from "@/components/sections/WhyUs";
-import { Results } from "@/components/sections/Results";
-import { Pricing } from "@/components/sections/Pricing";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { AuditForm } from "@/components/sections/AuditForm";
-import { FAQ } from "@/components/sections/FAQ";
 import { CTA } from "@/components/sections/CTA";
 
 export const Route = createFileRoute("/")({
@@ -29,12 +25,8 @@ function Home() {
     <Layout>
       <Hero />
       <Services />
-      <WhyUs />
-      <Results />
-      <Pricing />
       <Testimonials />
       <AuditForm />
-      <FAQ />
       <CTA />
     </Layout>
   );
