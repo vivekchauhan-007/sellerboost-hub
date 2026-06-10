@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { Section } from "@/components/Section";
-import { WhyUs } from "@/components/sections/WhyUs";
-import { Results } from "@/components/sections/Results";
 import { CTA } from "@/components/sections/CTA";
 
 export const Route = createFileRoute("/about")({
@@ -41,8 +39,6 @@ function AboutPage() {
           ))}
         </div>
       </Section>
-      <WhyUs />
-      <Results />
       <CTA />
     </Layout>
   );
