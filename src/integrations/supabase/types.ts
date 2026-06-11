@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity: string | null
+          entity_id: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity?: string | null
+          entity_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author: string | null
@@ -25,6 +55,8 @@ export type Database = {
           id: string
           published: boolean
           published_at: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           title: string
           updated_at: string
@@ -39,6 +71,8 @@ export type Database = {
           id?: string
           published?: boolean
           published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           title: string
           updated_at?: string
@@ -53,6 +87,8 @@ export type Database = {
           id?: string
           published?: boolean
           published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           title?: string
           updated_at?: string
@@ -66,11 +102,13 @@ export type Database = {
           email: string | null
           id: string
           is_read: boolean
+          lead_type: string
           message: string | null
           name: string
           phone: string | null
           sales_range: string | null
           source: string
+          status: Database["public"]["Enums"]["lead_status"]
         }
         Insert: {
           business?: string | null
@@ -78,11 +116,13 @@ export type Database = {
           email?: string | null
           id?: string
           is_read?: boolean
+          lead_type?: string
           message?: string | null
           name: string
           phone?: string | null
           sales_range?: string | null
           source?: string
+          status?: Database["public"]["Enums"]["lead_status"]
         }
         Update: {
           business?: string | null
@@ -90,11 +130,13 @@ export type Database = {
           email?: string | null
           id?: string
           is_read?: boolean
+          lead_type?: string
           message?: string | null
           name?: string
           phone?: string | null
           sales_range?: string | null
           source?: string
+          status?: Database["public"]["Enums"]["lead_status"]
         }
         Relationships: []
       }
@@ -285,6 +327,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          image_url: string | null
           initials: string | null
           is_active: boolean
           name: string
@@ -296,6 +339,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          image_url?: string | null
           initials?: string | null
           is_active?: boolean
           name: string
@@ -307,6 +351,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          image_url?: string | null
           initials?: string | null
           is_active?: boolean
           name?: string
@@ -353,6 +398,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor"
+      lead_status: "new" | "contacted" | "qualified" | "closed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -481,6 +527,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor"],
+      lead_status: ["new", "contacted", "qualified", "closed"],
     },
   },
 } as const
