@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Layout } from "@/components/Layout";
 import { Services } from "@/components/sections/Services";
 import { CTA } from "@/components/sections/CTA";
+import { Section } from "@/components/Section";
 
 export const Route = createFileRoute("/services")({
   head: () => ({
@@ -20,7 +21,14 @@ export const Route = createFileRoute("/services")({
 function ServicesPage() {
   return (
     <Layout>
-      <div className="pt-24" />
+      <Section
+        className="pt-32"
+        eyebrow="Services"
+        title={<>Everything to <span className="text-gradient-primary">scale on Flipkart</span></>}
+        subtitle="Pick what you need or let us handle it end-to-end."
+      >
+        <div />
+      </Section>
       <Services />
       <CTA />
     </Layout>

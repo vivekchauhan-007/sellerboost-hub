@@ -9,8 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, MapPin, MessageCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(80),
@@ -34,11 +32,8 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  const s = useSiteSettings();
   const [done, setDone] = useState(false);
-  const [busy, setBusy] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const r = schema.safeParse({
@@ -47,14 +42,10 @@ function ContactPage() {
       phone: String(fd.get("phone") ?? ""),
       message: String(fd.get("message") ?? ""),
     });
-    if (!r.success) return toast.error(r.error.issues[0].message);
-
-    setBusy(true);
-    const { error } = await supabase.from("contact_submissions").insert({
-      name: r.data.name, email: r.data.email, phone: r.data.phone, message: r.data.message, source: "contact",
-    });
-    setBusy(false);
-    if (error) return toast.error(error.message);
+    if (!r.success) {
+      toast.error(r.error.issues[0].message);
+      return;
+    }
     setDone(true);
     toast.success("Message sent! We'll get back within 24 hours.");
   };
@@ -70,9 +61,9 @@ function ContactPage() {
         <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
           <div className="lg:col-span-2 space-y-4">
             {[
-              { icon: MapPin, t: "Office", d: s.address },
-              { icon: Phone, t: "Phone", d: s.phone },
-              { icon: Mail, t: "Email", d: s.email },
+              { icon: MapPin, t: "Office", d: "WeWork Galaxy, Residency Road, Bengaluru 560025" },
+              { icon: Phone, t: "Phone", d: "+91 98765 43210" },
+              { icon: Mail, t: "Email", d: "hello@sellerboost.in" },
               { icon: MessageCircle, t: "WhatsApp", d: "Chat with an expert instantly" },
             ].map((c) => (
               <div key={c.t} className="bg-card border border-border rounded-2xl p-5 flex gap-4 hover:shadow-soft transition">
@@ -99,13 +90,25 @@ function ContactPage() {
             ) : (
               <form onSubmit={onSubmit} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div><Label htmlFor="name">Name</Label><Input id="name" name="name" required maxLength={80} className="mt-1.5" /></div>
-                  <div><Label htmlFor="phone">Phone</Label><Input id="phone" name="phone" type="tel" required maxLength={10} className="mt-1.5" /></div>
+                  <div>
+                    <Label htmlFor="name">Name</Label>
+                    <Input id="name" name="name" required maxLength={80} className="mt-1.5" />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone">Phone</Label>
+                    <Input id="phone" name="phone" type="tel" required maxLength={10} className="mt-1.5" />
+                  </div>
                 </div>
-                <div><Label htmlFor="email">Email</Label><Input id="email" name="email" type="email" required maxLength={120} className="mt-1.5" /></div>
-                <div><Label htmlFor="message">How can we help?</Label><Textarea id="message" name="message" required maxLength={1000} rows={5} className="mt-1.5" /></div>
-                <Button type="submit" disabled={busy} className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90">
-                  {busy ? "Sending…" : "Send Message"}
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" name="email" type="email" required maxLength={120} className="mt-1.5" />
+                </div>
+                <div>
+                  <Label htmlFor="message">How can we help?</Label>
+                  <Textarea id="message" name="message" required maxLength={1000} rows={5} className="mt-1.5" />
+                </div>
+                <Button type="submit" className="w-full bg-gradient-primary text-primary-foreground hover:opacity-90">
+                  Send Message
                 </Button>
               </form>
             )}

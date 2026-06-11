@@ -57,8 +57,8 @@ export function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="ghost" size="sm">Admin</Button>
+            <Link to="/contact">
+              <Button variant="ghost" size="sm">Login</Button>
             </Link>
             <Link to="/contact">
               <Button size="sm" className="bg-gradient-primary text-primary-foreground hover:opacity-90 shadow-elegant">

@@ -1,9 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { TrendingUp, Eye, RotateCcw, BadgeIndianRupee } from "lucide-react";
 import { Section } from "@/components/Section";
-import { supabase } from "@/integrations/supabase/client";
-import { getIcon } from "@/lib/iconMap";
 
-type Stat = { id: string; value: string; label: string; description: string | null; icon: string; tone: string };
+const stats = [
+  { icon: TrendingUp, value: "+312%", label: "Avg. Sales Growth", desc: "in first 90 days across active clients", tone: "primary" },
+  { icon: Eye, value: "+185%", label: "Product Visibility", desc: "improvement in Flipkart search rankings", tone: "accent" },
+  { icon: RotateCcw, value: "-42%", label: "Return Rate", desc: "reduction through catalog & QC improvements", tone: "success" },
+  { icon: BadgeIndianRupee, value: "5.8x", label: "Avg. ROAS", desc: "from optimized Sponsored Ads campaigns", tone: "primary" },
+];
 
 const toneMap: Record<string, string> = {
   primary: "from-primary to-primary-glow",
@@ -12,14 +15,6 @@ const toneMap: Record<string, string> = {
 };
 
 export function Results() {
-  const { data: stats = [] } = useQuery({
-    queryKey: ["public", "results_stats"],
-    queryFn: async (): Promise<Stat[]> => {
-      const { data } = await supabase.from("results_stats").select("*").eq("is_active", true).order("sort_order");
-      return (data ?? []) as Stat[];
-    },
-  });
-
   return (
     <Section
       eyebrow="Real Results"
@@ -27,25 +22,21 @@ export function Results() {
       subtitle="Aggregated performance across 500+ Flipkart sellers we've managed."
     >
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {stats.map((s, i) => {
-          const Icon = getIcon(s.icon);
-          const tone = toneMap[s.tone] ?? toneMap.primary;
-          return (
-            <div
-              key={s.id}
-              className="relative overflow-hidden rounded-2xl bg-card border border-border p-6 hover:shadow-elegant transition-all animate-fade-up"
-              style={{ animationDelay: `${i * 80}ms` }}
-            >
-              <div className={`absolute -top-10 -right-10 size-32 rounded-full bg-gradient-to-br ${tone} opacity-10`} />
-              <div className={`size-11 rounded-xl bg-gradient-to-br ${tone} grid place-items-center shadow-elegant`}>
-                <Icon className="size-5 text-white" />
-              </div>
-              <p className="mt-5 text-4xl font-bold tracking-tight">{s.value}</p>
-              <p className="font-semibold mt-1">{s.label}</p>
-              <p className="text-sm text-muted-foreground mt-1">{s.description}</p>
+        {stats.map((s, i) => (
+          <div
+            key={s.label}
+            className="relative overflow-hidden rounded-2xl bg-card border border-border p-6 hover:shadow-elegant transition-all animate-fade-up"
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
+            <div className={`absolute -top-10 -right-10 size-32 rounded-full bg-gradient-to-br ${toneMap[s.tone]} opacity-10`} />
+            <div className={`size-11 rounded-xl bg-gradient-to-br ${toneMap[s.tone]} grid place-items-center shadow-elegant`}>
+              <s.icon className="size-5 text-white" />
             </div>
-          );
-        })}
+            <p className="mt-5 text-4xl font-bold tracking-tight">{s.value}</p>
+            <p className="font-semibold mt-1">{s.label}</p>
+            <p className="text-sm text-muted-foreground mt-1">{s.desc}</p>
+          </div>
+        ))}
       </div>
     </Section>
   );
